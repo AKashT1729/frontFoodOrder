@@ -1,18 +1,28 @@
 import "./App.css";
-import Categories from "./components/Categories";
+import React from "react";
 import Home from "./components/Home";
-import Navbar from "./components/Navbar";
-import SubNav from "./components/SubNav";
+import { createBrowserRouter, RouterProvider } from "react-router";
+import AppLayout from "./components/Layout/AppLayout";
+import Categories from "./components/Categories";
 
-function App() {
-  return (
-    <>
-      <Navbar />
-      <SubNav />
-      {/* //<Home/> */}
-      <Categories />
-    </>
-  );
-}
+const App = () => {
+  const router = createBrowserRouter([
+    {
+      path: "/",
+      element: <AppLayout />,
+      children: [
+        {
+          path: "/",
+          element: <Home />,
+        },
+        {
+          path: "/categories",
+          element: <Categories />,
+        },
+      ],
+    },
+  ]);
+  return <RouterProvider router={router} />;
+};
 
 export default App;

@@ -1,14 +1,12 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
 
 const Home = () => {
+  const navigate = useNavigate();
   return (
     <>
       <div className="container mx-auto px-4 mt-10">
-        <img
-          src="src/assets/coffee-shop.png"
-          alt=""
-          className="mx-auto w-20"
-        />
+        <img src="src/assets/coffee-shop.png" alt="" className="mx-auto w-20" />
         <h1 className="text-3xl text-gray-900 text-center mt-2">
           Coffea & The Beanstalk Cafe
         </h1>
@@ -22,7 +20,10 @@ const Home = () => {
             <button className="py-2.5 px-5 mb-2 text-sm font-semibold rounded-2xl border cursor-pointer text-gray-800 border-gray-600 hover:text-gray-600 hover:bg-gray-200">
               🧾 Request For Bill
             </button>
-            <button className="py-2.5 px-5 mb-2 text-sm font-semibold rounded-2xl border cursor-pointer text-gray-800 border-gray-600 hover:text-gray-600 hover:bg-gray-200">
+            <button
+              onClick={() => navigate("/categories")}
+              className="py-2.5 px-5 mb-2 text-sm font-semibold rounded-2xl border cursor-pointer text-gray-800 border-gray-600 hover:text-gray-600 hover:bg-gray-200"
+            >
               🍽️ Order food
             </button>
           </div>
