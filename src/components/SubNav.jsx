@@ -11,7 +11,7 @@ const SubNav = () => {
           <i className="fa-regular fa-file mr-2"></i> Bill
         </button>
         <div className="flex items-center space-x-1">
-        <i class="fa-solid fa-mug-saucer"></i>
+        <i className="fa-solid fa-mug-saucer"></i>
           <span>{tableNumber}</span>
         </div>
       </nav>
