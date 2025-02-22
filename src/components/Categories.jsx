@@ -1,4 +1,5 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
 import "@fortawesome/fontawesome-free/css/all.min.css";
 
 const icon = "fa-solid fa-utensils";
@@ -32,6 +33,12 @@ const categories = [
 ];
 
 const Categories = () => {
+  const navigate = useNavigate();
+
+  const handleCategoryClick = (categoryName) => {
+    navigate(`/categories/${categoryName.toLowerCase().replace(/ /g, "-")}`);
+  };
+
   return (
     <div className="container mx-auto px-4 py-8">
       <h2 className="text-2xl font-semibold text-gray-900 mb-6">Categories</h2>
@@ -40,6 +47,7 @@ const Categories = () => {
           <div
             key={category.id}
             className="bg-white shadow-md rounded-lg overflow-hidden flex flex-col items-center p-4 cursor-pointer hover:shadow-lg"
+            onClick={() => handleCategoryClick(category.name)}
           >
             <i className={`${category.icon} text-4xl text-gray-700 mb-4`}></i>
             <h3 className="text-lg font-semibold text-gray-900">

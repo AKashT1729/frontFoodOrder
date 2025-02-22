@@ -4,6 +4,7 @@ import Home from "./components/Home";
 import { createBrowserRouter, RouterProvider } from "react-router";
 import AppLayout from "./components/Layout/AppLayout";
 import Categories from "./components/Categories";
+import Menu from "./components/Menu";
 
 const App = () => {
   const router = createBrowserRouter([
@@ -19,6 +20,10 @@ const App = () => {
           path: "/categories",
           element: <Categories />,
         },
+        {
+          path: "/categories/:categoryName",
+          element: <Menu/>,
+        }
       ],
     },
   ]);

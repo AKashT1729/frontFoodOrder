@@ -9,7 +9,7 @@ const AppLayout = () => {
   return (
     <>
       <Navbar />
-      {pathname === "/categories" && <SubNav />}
+      {(pathname === "/categories" || pathname.startsWith("/categories/")) && <SubNav />}
       <Outlet />
     </>
   );
