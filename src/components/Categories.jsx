@@ -1,58 +1,95 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { apiService } from "../services/api";
 import "@fortawesome/fontawesome-free/css/all.min.css";
 
-const icon = "fa-solid fa-utensils";
-const categories = [
-  { id: 1, name: "Fries", icon: icon },
-  { id: 2, name: "Pizza", icon: icon },
-  { id: 3, name: "Pasta", icon: icon },
-  { id: 4, name: "Macroni", icon: icon },
-  { id: 5, name: "Garlic Bread", icon: icon },
-  { id: 6, name: "Open Toast", icon: icon },
-  { id: 7, name: "Sandwiches", icon: icon },
-  { id: 8, name: "Pan Fried Paneer", icon: icon },
-  { id: 9, name: "Nachos", icon: icon },
-  { id: 10, name: "Maggie", icon: icon },
-  { id: 11, name: "Pav Bhaji", icon: icon },
-  { id: 12, name: "Momos", icon: icon },
-  { id: 13, name: "Noodles and Manchurian", icon: icon },
-  { id: 14, name: "Rice Bucket", icon: icon },
-  { id: 15, name: "Hunger Buckets", icon: icon },
-  { id: 16, name: "Diet Food", icon: icon },
-  { id: 17, name: "Soups", icon: icon },
-  { id: 18, name: "Cold Coffee", icon: icon },
-  { id: 19, name: "Frespresso (cold)", icon: icon },
-  { id: 20, name: "Cold Serve", icon: icon },
-  { id: 21, name: "Mojito & Lemonade", icon: icon },
-  { id: 22, name: "Ice Tea", icon: icon },
-  { id: 23, name: "Shakes", icon: icon },
-  { id: 24, name: "Hot Coffee", icon: icon },
-  { id: 25, name: "Hot Chocolate", icon: icon },
-  { id: 26, name: "Mineral Water", icon: icon },
-];
-
 const Categories = () => {
+  const [categories, setCategories] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        setLoading(true);
+        // Get all products and extract unique categories
+        const response = await apiService.getAllProducts();
+        const products = response.data;
+
+        // Extract unique categories and count products in each
+        const categoryMap = {};
+        products.forEach(product => {
+          if (!categoryMap[product.category]) {
+            categoryMap[product.category] = {
+              name: product.category,
+              count: 0,
+              icon: "fa-solid fa-utensils"
+            };
+          }
+          categoryMap[product.category].count += 1;
+        });
+
+        const categoryList = Object.values(categoryMap);
+        setCategories(categoryList);
+      } catch (err) {
+        setError(err.message);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchCategories();
+  }, []);
 
   const handleCategoryClick = (categoryName) => {
     navigate(`/categories/${categoryName.toLowerCase().replace(/ /g, "-")}`);
   };
 
+  if (loading) {
+    return (
+      <div className="container mx-auto px-4 py-8">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
+          <p className="mt-4 text-gray-600">Loading categories...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="container mx-auto px-4 py-8">
+        <div className="text-center">
+          <p className="text-red-600 mb-4">Error: {error}</p>
+          <button
+            onClick={() => window.location.reload()}
+            className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
+          >
+            Retry
+          </button>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="container mx-auto px-4 py-8">
       <h2 className="text-2xl font-semibold text-gray-900 mb-6">Categories</h2>
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-        {categories.map((category) => (
+        {categories.map((category, index) => (
           <div
-            key={category.id}
-            className="bg-white shadow-md rounded-lg overflow-hidden flex flex-col items-center p-4 cursor-pointer hover:shadow-lg"
+            key={index}
+            className="bg-white shadow-md rounded-lg overflow-hidden flex flex-col items-center p-4 cursor-pointer hover:shadow-lg transition-shadow"
             onClick={() => handleCategoryClick(category.name)}
           >
             <i className={`${category.icon} text-4xl text-gray-700 mb-4`}></i>
-            <h3 className="text-lg font-semibold text-gray-900">
+            <h3 className="text-lg font-semibold text-gray-900 text-center">
               {category.name}
             </h3>
+            <p className="text-sm text-gray-500 mt-1">
+              {category.count} items
+            </p>
           </div>
         ))}
       </div>
